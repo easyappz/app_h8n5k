@@ -114,19 +114,35 @@ document.addEventListener('DOMContentLoaded', function() {
       tag: tagName,
       element: element
     });
-    
-    window.parent.postMessage({
+
+    const closestParentEasyTag = element.closest('[data-easytag]');
+    const closestParentEasyTagValue = closestParentEasyTag ? closestParentEasyTag.getAttribute('data-easytag') : null;
+    const classes = element.className.replace('easy-hover-active', '');
+
+    const data = `"${tagName}" ${classes ? `with classes: ${classes}` : 'without classes'} in Component: ${closestParentEasyTagValue}`
+
+    const messageData = {
       type: 'easyTagClick',
       timestamp: new Date().toISOString(),
       tagName: tagName,
+      data: data,
       elementInfo: {
+        closestParentEasyTag: closestParentEasyTag,
         tag: tagName,
-        classes: element.className,
+        classes: classes,
         id: element.id,
         innerText: element.innerText ? element.innerText.substring(0, 100) : '',
         innerHTML: element.innerHTML ? element.innerHTML.substring(0, 200) : ''
       }
-    }, '*');
+    };
+
+    console.log({
+      messageData,
+    });
+
+    // if (window.parent.postMessage) {
+    //   window.parent.postMessage(messageData, '*');
+    // }
   }
 
   // Инициализация при загрузке, если режим уже активен
