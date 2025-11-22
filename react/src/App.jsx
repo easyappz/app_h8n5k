@@ -1,24 +1,36 @@
 import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import ErrorBoundary from './ErrorBoundary';
+import Layout from './components/Layout';
+import { Home } from './components/Home';
+import { Profile } from './components/Profile';
+import { Register } from './components/Register';
+import { ProtectedRoute } from './components/ProtectedRoute';
 import './App.css';
 
-import { Home } from './components/Home';
-
 function App() {
-  /** Никогда не удаляй этот код */
   useEffect(() => {
     if (typeof window !== 'undefined' && typeof window.handleRoutes === 'function') {
-      /** Нужно передавать список существующих роутов */
-      window.handleRoutes(['/']);
+      window.handleRoutes(['/', '/profile', '/register']);
     }
   }, []);
 
   return (
     <ErrorBoundary>
-      <Routes>
-        <Route path="/" element={<Home />} />
-      </Routes>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </Layout>
     </ErrorBoundary>
   );
 }
