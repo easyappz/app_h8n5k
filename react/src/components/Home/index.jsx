@@ -29,32 +29,13 @@ const normalizeMessages = (payload) => {
   return [];
 };
 
-const detectMessageKey = (message) => {
-  if (!message) {
-    return 'content';
-  }
-  if (typeof message.content === 'string') {
-    return 'content';
-  }
-  if (typeof message.text === 'string') {
-    return 'text';
-  }
-  if (typeof message.body === 'string') {
-    return 'body';
-  }
-  if (typeof message.message === 'string') {
-    return 'message';
-  }
-  return 'content';
-};
-
 export const Home = () => {
   const { login, register, member, token } = useAuth();
 
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
   const [loginError, setLoginError] = useState('');
   const [loginSuccess, setLoginSuccess] = useState('');
-  const [loginLoading, setLoginLoading] = useState(false);
+  the [loginLoading, setLoginLoading] = useState(false);
 
   const [quickForm, setQuickForm] = useState({ email: '', password: '' });
   const [quickError, setQuickError] = useState('');
@@ -67,16 +48,12 @@ export const Home = () => {
   const [composerError, setComposerError] = useState('');
   const [messageText, setMessageText] = useState('');
   const [sendingMessage, setSendingMessage] = useState(false);
-  const [messageField, setMessageField] = useState('content');
 
   const fetchMessages = useCallback(async () => {
     try {
       const response = await listMessages(token);
       const normalized = normalizeMessages(response);
       setMessages(normalized);
-      if (normalized.length > 0) {
-        setMessageField(detectMessageKey(normalized[0]));
-      }
       setChatAlert('');
     } catch (error) {
       setChatAlert(error?.message || 'Не удалось обновить чат.');
@@ -149,8 +126,7 @@ export const Home = () => {
     }
     setSendingMessage(true);
     try {
-      const payloadKey = messageField || 'content';
-      await sendMessage({ [payloadKey]: messageText.trim() }, token);
+      await sendMessage({ text: messageText.trim() }, token);
       setMessageText('');
       await fetchMessages();
     } catch (error) {
