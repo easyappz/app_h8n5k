@@ -1,0 +1,34 @@
+post:
+  summary: Register a new member
+  operationId: registerMember
+  tags:
+    - auth
+  description: Creates a new member account and returns an authentication token.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            email:
+              type: string
+              format: email
+            password:
+              type: string
+              minLength: 8
+            display_name:
+              type: string
+              maxLength: 150
+          required:
+            - email
+            - password
+  responses:
+    '201':
+      description: Member successfully registered
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TokenResponse'
+    '400':
+      description: Validation error

@@ -3,44 +3,73 @@ info:
   title: Easyapp API
   version: 1.0.0
   description: API documentation for easyapp
+servers:
+  - url: /
 paths:
-  /api/hello/:
-    get:
-      operationId: api_hello_retrieve
-      description: Get a hello world message
-      tags:
-      - api
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Message'
-          description: ''
+  /api/register/:
+    $ref: ./endpoints/register.yml
+  /api/login/:
+    $ref: ./endpoints/login.yml
+  /api/profile/:
+    $ref: ./endpoints/profile.yml
+  /api/messages/:
+    $ref: ./endpoints/messages.yml
 components:
   schemas:
-    Message:
+    Member:
       type: object
       properties:
-        message:
+        id:
+          type: integer
+        email:
           type: string
-          maxLength: 200
-        timestamp:
+          format: email
+        display_name:
+          type: string
+        created_at:
           type: string
           format: date-time
-          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
       required:
-      - message
-      - timestamp
+        - id
+        - email
+        - display_name
+        - created_at
+        - updated_at
+    ChatMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+        member:
+          $ref: '#/components/schemas/Member'
+        text:
+          type: string
+          maxLength: 1000
+        created_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - member
+        - text
+        - created_at
+    TokenResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Token string to be sent as "Authorization: Token <key>"
+        member:
+          $ref: '#/components/schemas/Member'
+      required:
+        - token
+        - member
   securitySchemes:
-    basicAuth:
-      type: http
-      scheme: basic
-    cookieAuth:
+    TokenAuth:
       type: apiKey
-      in: cookie
-      name: sessionid
+      in: header
+      name: Authorization
+      description: Use format "Token <key>"

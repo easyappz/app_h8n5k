@@ -1,0 +1,45 @@
+get:
+  summary: List recent chat messages
+  operationId: listMessages
+  tags:
+    - messages
+  description: Returns up to the 50 most recent chat messages sorted by creation time ascending.
+  responses:
+    '200':
+      description: Messages fetched successfully
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ChatMessage'
+post:
+  summary: Create a chat message
+  operationId: createMessage
+  tags:
+    - messages
+  security:
+    - TokenAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            text:
+              type: string
+              maxLength: 1000
+          required:
+            - text
+  responses:
+    '201':
+      description: Message created
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ChatMessage'
+    '400':
+      description: Validation error
+    '401':
+      description: Unauthorized

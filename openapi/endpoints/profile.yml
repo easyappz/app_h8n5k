@@ -1,0 +1,16 @@
+get:
+  summary: Retrieve current member profile
+  operationId: retrieveProfile
+  tags:
+    - profile
+  security:
+    - TokenAuth: []
+  responses:
+    '200':
+      description: Profile data
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Member'
+    '401':
+      description: Unauthorized
